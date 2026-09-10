@@ -90,11 +90,6 @@ Files 列表数据错位混入的他集 .osu 会按内嵌 BeatmapSetID 过滤，
 会被明确跳过并提示。
 支持批量、进度事件、随时取消，单集失败不影响其余集。
 
-### 多语言
-
-设置 → 语言：中文 / English。首次启动按系统语言自动选择，切换后立即生效（含窗口标题），
-记忆在本地 `osu-mgr.lang`。英文文案与中文同标准：直白朴素，无营销腔。
-
 ## 数据与隐私
 
 - **lazer 曲库绝对只读**：删除/移动/打包/转换等一切写操作仅作用于用户选择的目标目录与
@@ -152,8 +147,6 @@ database**, the **osu!stable Songs directory**, and **.osz folders**.
 - Downloads: batch .osz downloads across a mirror chain (hinai → osu.direct → nerinyan → sayobot)
 - **Convert**: turn lazer library sets into stable Songs folders or .osz files (read-only on lazer)
 - CSV export compatible with community tools (UTF-8 with BOM)
-- **i18n**: Chinese / English switching in Settings (auto-detected on first launch, instant,
-  remembered locally)
 
 ### Convert (lazer → stable)
 
