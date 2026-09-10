@@ -1,0 +1,11 @@
+[package]
+name = "realm-codec-rs"
+version = "0.1.1"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/PopCat19/pinkha"
+description = "Parser and writer for Realm binary database files — read tables, build new files"
+
+[lib]
+name = "realm_codec"
+path = "src/lib.rs"

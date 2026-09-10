@@ -1,0 +1,49 @@
+[package]
+name = "osu-song-manager"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "osu_song_manager_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+# Vendored from https://github.com/PopCat19/pinkha (osu-realm-util's realm-codec, MIT,
+# LICENSE preserved at vendor/realm-codec/LICENSE). Proven to decode Realm v24
+# (osu!lazer client.realm). Used read-only by src/realm_db.rs.
+realm-codec-rs = { path = "vendor/realm-codec" }
+# M4c 在线元数据：blocking 客户端（在 spawn_blocking 线程内使用）。
+# 选 reqwest 而非 ureq：tauri 已把 reqwest 0.13 带入依赖树（零新增树重）；
+# TLS 用 native-tls（Windows = schannel，系统实现，不引入 ring/C 编译链风险）。
+# M7：stream 特性用于 blocking Response::copy_to 的流式读取（按契约添加；
+# 实际进度循环走 impl Read for Response，两者同受 stream 门控）。
+reqwest = { version = "0.13", default-features = false, features = ["blocking", "native-tls", "form", "stream"] }
+# M5 缩略图/导出管线：image 仅解码 jpg/png/webp（源文件为内容寻址、无扩展名，需魔数自动嗅探）；
+# rfd 提供原生文件夹选择器（Rust 侧，免 plugin/capability 配置）；sha2 已在依赖树（tauri 传递），
+# 显式声明用于缩略图缓存键（稳定哈希，FNV/std hasher 不保证跨版本稳定）。
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp"] }
+rfd = "0.17"
+sha2 = "0.10"
+# M6 危险操作：回收站删除（Windows 走 shell API，无需管理员）；
+# md-5 用于 stable/.osz 的 .osu 文件 MD5（model.BeatmapInfo.md5 的既有文档语义，
+# detect_duplicates 的 md5/identicalSet 分组依赖；RustCrypto 纯 Rust 实现）。
+trash = "5"
+md-5 = "0.10"
+# M8：CSV 导出（csv::Writer 逐行写入预格式化字符串，最小 RFC4180 引号规则）
+csv = "1"
+
